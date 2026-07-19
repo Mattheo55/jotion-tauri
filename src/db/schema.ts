@@ -8,3 +8,16 @@ export const notebookTable = sqliteTable('notebook', {
 
 export type Notebook = InferSelectModel<typeof notebookTable>;
 export type NotebookInsert = InferInsertModel<typeof notebookTable>;
+
+export const noteTable = sqliteTable('note', {
+    id: integer().primaryKey({autoIncrement: true}),
+    name: text().notNull(),
+    content: text().notNull(),
+    notebook_id: integer().references(() => notebookTable.id).notNull(),
+
+    created_at: integer({mode: "timestamp"}).notNull().$defaultFn(() => new Date()),
+    updated_at: integer({mode: "timestamp"}).notNull().$defaultFn(() => new Date()).$onUpdateFn(() => new Date()),
+})
+
+export type Note = InferSelectModel<typeof noteTable>;
+export type NoteInsert = InferInsertModel<typeof noteTable>;

@@ -14,7 +14,25 @@ pub fn run() {
             description: "Create notebook table",
             sql: include_str!("../../drizzle/20260719140142_purple_mockingbird/migration.sql"),
             kind: MigrationKind::Up,
-        }
+        },
+        Migration{
+            version: 2,
+            description: "Create note table",
+            sql: include_str!("../../drizzle/20260719163332_overconfident_vector/migration.sql"),
+            kind: MigrationKind::Up,
+        },
+        Migration{
+            version: 3,
+            description: "Add note reference notebook table",
+            sql: include_str!("../../drizzle/20260719163525_bright_leopardon/migration.sql"),
+            kind: MigrationKind::Up,
+        },
+        Migration{
+            version: 4,
+            description: "Add timestamp to note table",
+            sql: include_str!("../../drizzle/20260719170104_damp_lethal_legion/migration.sql"),
+            kind: MigrationKind::Up,
+        },
     ];
 
     tauri::Builder::default()

@@ -1,0 +1,112 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "id": "0b40814e-3518-4d7e-b658-9d0e43f58140",
+  "prevIds": [
+    "dcf220e5-5982-4e99-929a-eaa4abf6ff41"
+  ],
+  "ddl": [
+    {
+      "name": "note",
+      "entityType": "tables"
+    },
+    {
+      "name": "notebook",
+      "entityType": "tables"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": true,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "note"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "note"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "content",
+      "entityType": "columns",
+      "table": "note"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "notebook_id",
+      "entityType": "columns",
+      "table": "note"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": true,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "notebook"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "notebook"
+    },
+    {
+      "columns": [
+        "notebook_id"
+      ],
+      "tableTo": "notebook",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "nameExplicit": false,
+      "name": "fk_note_notebook_id_notebook_id_fk",
+      "entityType": "fks",
+      "table": "note"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "note_pk",
+      "table": "note",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "notebook_pk",
+      "table": "notebook",
+      "entityType": "pks"
+    }
+  ],
+  "renames": []
+}

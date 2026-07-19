@@ -1,0 +1,1 @@
+ALTER TABLE `note` ADD `notebook_id` integer NOT NULL REFERENCES notebook(id);
