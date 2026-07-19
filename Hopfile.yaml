@@ -3,3 +3,6 @@ tasks:
     comment: Démarre l'application en mode développement
     run: |
       npm run tauri dev
+  migrate:
+    run: |
+      npx drizzle-kit generate
