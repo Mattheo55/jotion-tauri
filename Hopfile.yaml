@@ -1,0 +1,5 @@
+tasks:
+  dev:
+    comment: Démarre l'application en mode développement
+    run: |
+      npm run tauri dev
