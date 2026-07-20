@@ -1,8 +1,8 @@
-import { KeyboardEvent, useEffect, useRef, useState } from "react";
+import { KeyboardEvent, useEffect, useState } from "react";
 import { useNoteStore } from "../store/noteStore";
 import { useUpdateNote } from "../hooks/useNote";
 import { useCreateBlockNote } from "@blocknote/react";
-import { BlockNoteView } from "@blocknote/mantine";
+import { BlockNoteView, darkDefaultTheme } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import "@blocknote/core/fonts/inter.css";
 
@@ -13,6 +13,7 @@ export default function Editor() {
     const { mutate } = useUpdateNote();
 
     const editor = useCreateBlockNote();
+    const jotionTheme = {...darkDefaultTheme, colors: {...darkDefaultTheme.colors, editor: {background: '#181818'}}}
 
     useEffect(() => {
         if (selectedNote) {
@@ -45,8 +46,8 @@ export default function Editor() {
                 onKeyDown={handleEventKey}
             />
 
-            <div className="mt-5 p-5">
-                <BlockNoteView editor={editor} />
+            <div className="mt-5">
+                <BlockNoteView editor={editor} theme={jotionTheme} />
             </div>
         </div>
     );
