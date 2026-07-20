@@ -70,7 +70,11 @@ export default function Sidebar() {
                     {isCreating && <NotebookButton notebook={{ id: 0, name: "Nouvelle note" }} renaming onRenaming={handleConfirmNotebookCreate} onBlur={() => setIsCreating(false)} />}
                     {
                         notebooks.map(n => (
-                            <ContextMenuWrapper key={n.id} onRename={() => setRenamingId(n.id)}>
+                            <ContextMenuWrapper 
+                                key={n.id} 
+                                onRename={() => setRenamingId(n.id)}
+                                onDelete={() => {}}
+                            >
                                 <NotebookButton notebook={n} onPress={() => handleChangeNotebook(n)} onRenaming={(newName) => handleConfirmRenaiming(newName)} onBlur={() => setRenamingId(null)} active={n.id === selectedNotebook?.id} renaming={renamingId === n.id} />
                             </ContextMenuWrapper>
                         ))
