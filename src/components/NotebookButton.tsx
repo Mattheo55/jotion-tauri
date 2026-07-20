@@ -26,7 +26,7 @@ export default function NotebookButton({notebook, renaming, onPress, active, onR
     }
 
   return (
-    <button className={twMerge("flex gap-2 py-2 px-5 cursor-pointer", active ? "bg-gray-400/5": "hover:bg-gray-400/5")} onClick={onPress}>
+    <button className={twMerge("flex gap-2 py-2 px-5 cursor-pointer w-full", active ? "bg-gray-400/5": "hover:bg-gray-400/5")} onClick={onPress}>
         {active ? <FolderOpen color={"#fff"}/> : <Folder color={"#A3A3A3"}/>}
         {renaming ? <input autoFocus value={name} onChange={(e) => setName(e.target.value)} className="text-white" onKeyDown={handleKeyDown} onBlur={onBlur}/> : <p className={active ? "text-white" : "text-[#A3A3A3]"}>{notebook.name}</p>}
     </button>

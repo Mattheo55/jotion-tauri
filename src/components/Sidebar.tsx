@@ -1,18 +1,21 @@
 import { FolderPlus, Plus } from "lucide-react";
-import { useCreateNotebook, useNotebooks } from "../hooks/useNotebook";
+import { useCreateNotebook, useNotebooks, useUpdateNotebook } from "../hooks/useNotebook";
 import NotebookButton from "./NotebookButton";
 import { useState } from "react";
 import { useNotebookStore } from "../store/notebookStore";
 import { useCreateNote } from "../hooks/useNote";
 import { useNoteStore } from "../store/noteStore";
 import { Notebook } from "../db/schema";
+import ContextMenuWrapper from "./ContextMenuWrapper";
 
 export default function Sidebar() {
     const [isCreating, setIsCreating] = useState<boolean>(false);
+    const [renamingId, setRenamingId] = useState<number | null>(null);
 
     const { data: notebooks = [] } = useNotebooks();
     const { mutate } = useCreateNotebook();
     const {mutate: createNote} = useCreateNote();
+    const {mutate: updateNotebook} = useUpdateNotebook();
 
     const selectedNotebook = useNotebookStore((state) => state.selectedNotebook)
     const setSelectedNotbook = useNotebookStore((state) => state.setSelecedNote);
@@ -22,6 +25,16 @@ export default function Sidebar() {
     const handleConfirmNotebookCreate = (name: string) => {
         setIsCreating(false);
         mutate({ name: name.trim() })
+    }
+
+    const handleConfirmRenaiming = async (newName: string) => {
+        updateNotebook({id: renamingId!, name: newName});
+        const currentNotebook = notebooks.find(n => n.id === renamingId);
+        if(currentNotebook) {
+            setSelectedNotbook({...currentNotebook, name: newName});
+            setSelectedNote(null);
+        }
+        setRenamingId(null);
     }
 
     const heandleCreateNote = () => {
@@ -53,11 +66,13 @@ export default function Sidebar() {
                     <p className="text-[#A3A3A3] font-bold select-none">Carnet</p>
                     <button className="cursor-pointer" onClick={() => setIsCreating(true)}><FolderPlus color={"#A3A3A3"} /></button>
                 </div>
-                <div className="flex flex-col mt-2">
+                <div className="flex flex-col mt-2 flex-1">
                     {isCreating && <NotebookButton notebook={{ id: 0, name: "Nouvelle note" }} renaming onRenaming={handleConfirmNotebookCreate} onBlur={() => setIsCreating(false)} />}
                     {
                         notebooks.map(n => (
-                            <NotebookButton key={n.id} notebook={n} onPress={() => handleChangeNotebook(n)} active={n.id === selectedNotebook?.id} />
+                            <ContextMenuWrapper key={n.id} onRename={() => setRenamingId(n.id)}>
+                                <NotebookButton notebook={n} onPress={() => handleChangeNotebook(n)} onRenaming={(newName) => handleConfirmRenaiming(newName)} onBlur={() => setRenamingId(null)} active={n.id === selectedNotebook?.id} renaming={renamingId === n.id} />
+                            </ContextMenuWrapper>
                         ))
                     }
                 </div>
