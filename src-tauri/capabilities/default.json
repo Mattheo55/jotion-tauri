@@ -14,6 +14,25 @@
     "sql:allow-execute",
     "core:window:allow-close",
     "core:window:allow-minimize",
-    "core:window:allow-toggle-maximize"
+    "core:window:allow-toggle-maximize",
+    "dialog:default",
+    "os:default",
+    "fs:default",
+    {
+      "identifier": "fs:allow-exists",
+      "allow": [{ "path": "$APPDATA/**" }]
+    },
+    {
+      "identifier": "fs:allow-mkdir",
+      "allow": [{ "path": "$APPDATA/**" }]
+    },
+    {
+      "identifier": "fs:allow-write-file",
+      "allow": [{ "path": "$APPDATA/**" }]
+    },
+    {
+      "identifier": "fs:allow-read-file",
+      "allow": [{ "path": "$APPDATA/**" }]
+    }
   ]
 }

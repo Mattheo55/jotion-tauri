@@ -9,25 +9,25 @@ fn greet(name: &str) -> String {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let migrations = vec![
-        Migration{
+        Migration {
             version: 1,
             description: "Create notebook table",
             sql: include_str!("../../drizzle/20260719140142_purple_mockingbird/migration.sql"),
             kind: MigrationKind::Up,
         },
-        Migration{
+        Migration {
             version: 2,
             description: "Create note table",
             sql: include_str!("../../drizzle/20260719163332_overconfident_vector/migration.sql"),
             kind: MigrationKind::Up,
         },
-        Migration{
+        Migration {
             version: 3,
             description: "Add note reference notebook table",
             sql: include_str!("../../drizzle/20260719163525_bright_leopardon/migration.sql"),
             kind: MigrationKind::Up,
         },
-        Migration{
+        Migration {
             version: 4,
             description: "Add timestamp to note table",
             sql: include_str!("../../drizzle/20260719170104_damp_lethal_legion/migration.sql"),
@@ -36,7 +36,14 @@ pub fn run() {
     ];
 
     tauri::Builder::default()
-        .plugin(tauri_plugin_sql::Builder::new().add_migrations("sqlite:db.db", migrations).build())
+        .plugin(tauri_plugin_os::init())
+        .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(
+            tauri_plugin_sql::Builder::new()
+                .add_migrations("sqlite:db.db", migrations)
+                .build(),
+        )
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![greet])
         .run(tauri::generate_context!())

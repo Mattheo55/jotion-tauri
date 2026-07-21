@@ -6,3 +6,6 @@ tasks:
   migrate:
     run: |
       npx drizzle-kit generate
+  studio:
+    run: |
+      npx drizzle-kit studio

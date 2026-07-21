@@ -8,6 +8,7 @@ import { useNoteStore } from "../store/noteStore";
 import { Notebook } from "../db/schema";
 import ContextMenuWrapper from "./ContextMenuWrapper";
 import TitleMenuButtons from "./TitleMenuButtons";
+import SettingDialog from "./SettingDialog";
 
 export default function Sidebar() {
     const [isCreating, setIsCreating] = useState<boolean>(false);
@@ -62,7 +63,11 @@ export default function Sidebar() {
             </div>
 
             <div className="p-5">
-                <button onClick={heandleCreateNote} className="text-white bg-[#242424] w-full justify-center rounded flex gap-2 py-2 font-bold cursor-pointer"><Plus color="#fff" />{selectedNotebook ? "Nouvelle note" : "Nouveau carnet"}</button>
+                <button onClick={heandleCreateNote} disabled={!selectedNotebook} className="text-white bg-[#242424] w-full justify-center rounded flex gap-2 py-2 font-bold cursor-pointer"><Plus color="#fff" />Nouvelle note</button>
+            </div>
+
+            <div className="px-5 my-5">
+                <SettingDialog/>
             </div>
 
             <div className="mt-2">
