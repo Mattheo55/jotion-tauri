@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 import { ContextMenu, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuTrigger } from "./ui/context-menu";
-import { Edit, PackageOpen, Trash, View } from "lucide-react";
+import { Edit, PackageOpen, Sparkle, Trash, View } from "lucide-react";
 
 interface ContextMenuWrapperProps {
     children: ReactNode;
@@ -9,9 +9,17 @@ interface ContextMenuWrapperProps {
     onDelete?: () => void;
     onView?: () => void;
     onOpen?: () => void;
+    onCorrect?: () => void;
 }
 
-export default function ContextMenuWrapper({children, onRename, onDelete, onView, onOpen}: ContextMenuWrapperProps) {
+export default function ContextMenuWrapper({
+    children, 
+    onRename, 
+    onDelete, 
+    onView, 
+    onOpen, 
+    onCorrect
+}: ContextMenuWrapperProps) {
   return (
     <ContextMenu>
         <ContextMenuTrigger>{children}</ContextMenuTrigger>
@@ -20,6 +28,7 @@ export default function ContextMenuWrapper({children, onRename, onDelete, onView
                 {onRename && <ContextMenuItem onClick={onRename}><Edit/> Renommer</ContextMenuItem>}
                 {onView && <ContextMenuItem onClick={onView}><View/> Voir</ContextMenuItem>}
                 {onOpen && <ContextMenuItem onClick={onOpen}><PackageOpen/> Ouvrir</ContextMenuItem>}
+                {onCorrect && <ContextMenuItem onClick={onOpen}><Sparkle/> Corriger</ContextMenuItem>}
                 {onDelete && <ContextMenuItem onClick={onDelete} variant='destructive'><Trash/> Supprimer</ContextMenuItem>}
             </ContextMenuGroup>
         </ContextMenuContent>

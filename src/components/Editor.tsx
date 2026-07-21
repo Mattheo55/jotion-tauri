@@ -1,4 +1,4 @@
-import { KeyboardEvent, useEffect, useState } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useNoteStore } from "../store/noteStore";
 import { useUpdateNote } from "../hooks/useNote";
 import { useCreateBlockNote } from "@blocknote/react";
@@ -12,8 +12,10 @@ export default function Editor() {
 
     const { mutate } = useUpdateNote();
 
-    const editor = useCreateBlockNote();
-    const jotionTheme = {...darkDefaultTheme, colors: {...darkDefaultTheme.colors, editor: {background: '#181818'}}}
+    const editor = useCreateBlockNote({initialContent: selectedNote?.content ? JSON.parse(selectedNote.content) : undefined});
+    const jotionTheme = {...darkDefaultTheme, colors: {...darkDefaultTheme.colors, editor: {background: '#181818'}}};
+
+    const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
         if (selectedNote) {
@@ -33,12 +35,25 @@ export default function Editor() {
         mutate({ id: selectedNote.id, name: name });
     };
 
-    //const handleSaveContent = async () => {
-    //    mutate({ id: selectedNote.id, content: JSON.stringify(outputData) });
-    //};
+    const handleSaveContent = () => {
+        if (saveTimeoutRef.current) {
+            clearTimeout(saveTimeoutRef.current);
+        }
+
+        saveTimeoutRef.current = setTimeout(() => {
+            const currentContent = editor.document;
+            
+            mutate({ 
+                id: selectedNote.id, 
+                content: JSON.stringify(currentContent) 
+            });
+            
+            console.log("Sauvegarde BlockNote réussie !");
+        }, 1000);
+    };
 
     return (
-        <div className="p-5">
+        <div className="p-5 overflow-y-auto scrollbar-thin scrollbar-thumb-sky-700 scrollbar-track-sky-100">
             <input
                 className="text-white w-full text-2xl font-bold"
                 value={name}
@@ -47,7 +62,7 @@ export default function Editor() {
             />
 
             <div className="mt-5">
-                <BlockNoteView editor={editor} theme={jotionTheme} />
+                <BlockNoteView editor={editor} theme={jotionTheme} onChange={handleSaveContent} />
             </div>
         </div>
     );

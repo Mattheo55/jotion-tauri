@@ -11,7 +11,7 @@ export default function App() {
     <main className='h-screen flex flex-row overflow-y-hidden'>
       <Sidebar/>
       <NoteSidebar/>
-      <div className='bg-[#181818] flex-1'>
+      <div className='bg-[#181818] h-full flex flex-col flex-1'>
         {selectedNote ? <Editor/> : <EmptyState/>}
       </div>
     </main>

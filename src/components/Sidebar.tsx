@@ -7,6 +7,7 @@ import { useCreateNote } from "../hooks/useNote";
 import { useNoteStore } from "../store/noteStore";
 import { Notebook } from "../db/schema";
 import ContextMenuWrapper from "./ContextMenuWrapper";
+import TitleMenuButtons from "./TitleMenuButtons";
 
 export default function Sidebar() {
     const [isCreating, setIsCreating] = useState<boolean>(false);
@@ -14,8 +15,8 @@ export default function Sidebar() {
 
     const { data: notebooks = [] } = useNotebooks();
     const { mutate } = useCreateNotebook();
-    const {mutate: createNote} = useCreateNote();
-    const {mutate: updateNotebook} = useUpdateNotebook();
+    const { mutate: createNote } = useCreateNote();
+    const { mutate: updateNotebook } = useUpdateNotebook();
 
     const selectedNotebook = useNotebookStore((state) => state.selectedNotebook)
     const setSelectedNotbook = useNotebookStore((state) => state.setSelecedNote);
@@ -28,17 +29,17 @@ export default function Sidebar() {
     }
 
     const handleConfirmRenaiming = async (newName: string) => {
-        updateNotebook({id: renamingId!, name: newName});
+        updateNotebook({ id: renamingId!, name: newName });
         const currentNotebook = notebooks.find(n => n.id === renamingId);
-        if(currentNotebook) {
-            setSelectedNotbook({...currentNotebook, name: newName});
+        if (currentNotebook) {
+            setSelectedNotbook({ ...currentNotebook, name: newName });
             setSelectedNote(null);
         }
         setRenamingId(null);
     }
 
     const heandleCreateNote = () => {
-        if(!selectedNotebook) return;
+        if (!selectedNotebook) return;
         createNote({
             notebook_id: selectedNotebook.id,
             name: "Sans titre",
@@ -47,7 +48,7 @@ export default function Sidebar() {
     }
 
     const handleChangeNotebook = (n: Notebook) => {
-        if(n.id === selectedNotebook?.id) return;
+        if (n.id === selectedNotebook?.id) return;
 
         setSelectedNote(null);
         setSelectedNotbook(n);
@@ -55,7 +56,10 @@ export default function Sidebar() {
 
     return (
         <div className='bg-[#181818] w-70' data-tauri-drag-region>
-            <div className='p-5'><p className='text-white font-bold text-3xl select-none'>Jotion</p></div>
+            <div className="flex items-center justify-between p-5" data-tauri-drag-region>
+                <p className='text-white font-bold text-3xl select-none' data-tauri-drag-region>Jotion</p>
+                <TitleMenuButtons />
+            </div>
 
             <div className="p-5">
                 <button onClick={heandleCreateNote} className="text-white bg-[#242424] w-full justify-center rounded flex gap-2 py-2 font-bold cursor-pointer"><Plus color="#fff" />{selectedNotebook ? "Nouvelle note" : "Nouveau carnet"}</button>
@@ -70,10 +74,10 @@ export default function Sidebar() {
                     {isCreating && <NotebookButton notebook={{ id: 0, name: "Nouvelle note" }} renaming onRenaming={handleConfirmNotebookCreate} onBlur={() => setIsCreating(false)} />}
                     {
                         notebooks.map(n => (
-                            <ContextMenuWrapper 
-                                key={n.id} 
+                            <ContextMenuWrapper
+                                key={n.id}
                                 onRename={() => setRenamingId(n.id)}
-                                onDelete={() => {}}
+                                onDelete={() => { }}
                             >
                                 <NotebookButton notebook={n} onPress={() => handleChangeNotebook(n)} onRenaming={(newName) => handleConfirmRenaiming(newName)} onBlur={() => setRenamingId(null)} active={n.id === selectedNotebook?.id} renaming={renamingId === n.id} />
                             </ContextMenuWrapper>
