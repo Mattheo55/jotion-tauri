@@ -13,11 +13,10 @@ export const useNotes = () => {
     })
 }
 
-export const useNotesByNotebook = (notebookId: number | null, isEnabled: boolean) => {
+export const useNotesByNotebook = (notebookId: number) => {
     return useQuery({
         queryKey: [NOTES, notebookId],
         queryFn: () => db.select().from(noteTable).where(eq(noteTable.notebook_id, notebookId!)).orderBy(desc(noteTable.created_at)),
-        enabled: isEnabled
     })
 }
 

@@ -1,16 +1,18 @@
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useNoteStore } from "../store/noteStore";
 import { useUpdateNote } from "../hooks/useNote";
-import { useCreateBlockNote } from "@blocknote/react";
+import { DefaultReactSuggestionItem, getDefaultReactSlashMenuItems, SuggestionMenuController, useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView, darkDefaultTheme } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import "@blocknote/core/fonts/inter.css";
-import { BlockNoteSchema, createCodeBlockSpec } from "@blocknote/core";
+import { BlockNoteEditor, BlockNoteSchema, createCodeBlockSpec, filterSuggestionItems, insertBlocks } from "@blocknote/core";
 import { createHighlighter } from "./shiki.bundle";
 import { fr } from "@blocknote/core/locales";
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { writeFile, mkdir, exists } from '@tauri-apps/plugin-fs';
 import { appDataDir, join } from '@tauri-apps/api/path';
+import { AlertBlock, insertAlert } from "@/block/AlertBlock";
+import { insertNoteLink, NoteLinkBlock } from "@/block/NoteLinkBlock";
 
 export default function Editor() {
     const [name, setName] = useState<string>("");
@@ -48,6 +50,8 @@ export default function Editor() {
         uploadFile: uploadLocalFile,
         schema: BlockNoteSchema.create().extend({
             blockSpecs: {
+                alert: AlertBlock(),
+                noteLink: NoteLinkBlock(),
                 codeBlock: createCodeBlockSpec({
                     indentLineWithTab: true,
                     defaultLanguage: "typescript",
@@ -65,6 +69,14 @@ export default function Editor() {
             }
         })
     });
+
+    const getCustomSlashMenuItems = (
+        editor: BlockNoteEditor,
+        ): DefaultReactSuggestionItem[] => [
+            ...getDefaultReactSlashMenuItems(editor),
+            insertAlert(editor),
+            insertNoteLink(editor),
+        ];      
 
 
     const jotionTheme = {...darkDefaultTheme, colors: {...darkDefaultTheme.colors, editor: {background: '#181818'}}};
@@ -116,7 +128,9 @@ export default function Editor() {
             />
 
             <div className="mt-5">
-                <BlockNoteView editor={editor} theme={jotionTheme} onChange={handleSaveContent} />
+                <BlockNoteView editor={editor} theme={jotionTheme} onChange={handleSaveContent} slashMenu={false}>
+                    <SuggestionMenuController triggerCharacter="/" getItems={async (query) => filterSuggestionItems(getCustomSlashMenuItems(editor as any), query)}/>
+                </BlockNoteView>
             </div>
         </div>
     );
