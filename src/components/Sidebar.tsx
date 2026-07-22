@@ -1,4 +1,4 @@
-import { FolderPlus, Plus } from "lucide-react";
+import { Archive, FolderPlus, Plus, Trash } from "lucide-react";
 import { useCreateNotebook, useNotebooks, useUpdateNotebook } from "../hooks/useNotebook";
 import NotebookButton from "./NotebookButton";
 import { useState } from "react";
@@ -9,6 +9,9 @@ import { Notebook } from "../db/schema";
 import ContextMenuWrapper from "./ContextMenuWrapper";
 import TitleMenuButtons from "./TitleMenuButtons";
 import SettingDialog from "./SettingDialog";
+import ButtonSidebar from "./ButtonSidebar";
+import { useNavigationStore } from "@/store/navigationStore";
+import { vi } from "@blocknote/core/locales";
 
 export default function Sidebar() {
     const [isCreating, setIsCreating] = useState<boolean>(false);
@@ -21,6 +24,8 @@ export default function Sidebar() {
 
     const selectedNotebook = useNotebookStore((state) => state.selectedNotebook)
     const setSelectedNotbook = useNotebookStore((state) => state.setSelecedNote);
+    const setNavigationMode = useNavigationStore((state) => state.setSelectedMode);
+    const viewMode = useNavigationStore((state) => state.viewMode);
 
     const setSelectedNote = useNoteStore((state) => state.setSelectedNote);
 
@@ -53,12 +58,19 @@ export default function Sidebar() {
 
         setSelectedNote(null);
         setSelectedNotbook(n);
+        setNavigationMode('notebook')
+    }
+
+    const handleShowArchive = () => {
+        setNavigationMode("archive");
+        setSelectedNotbook(null);
+        setSelectedNote(null);
     }
 
     return (
-        <div className='bg-[#181818] w-70' data-tauri-drag-region>
+        <div className='bg-[#181818] w-65' data-tauri-drag-region>
             <div className="flex items-center justify-between p-5" data-tauri-drag-region>
-                <p className='text-white font-bold text-3xl select-none' data-tauri-drag-region>Jotion</p>
+                <p className='text-white font-bold text-xl select-none' data-tauri-drag-region>Jotion</p>
                 <TitleMenuButtons />
             </div>
 
@@ -66,8 +78,10 @@ export default function Sidebar() {
                 <button onClick={heandleCreateNote} disabled={!selectedNotebook} className="text-white bg-[#242424] w-full justify-center rounded flex gap-2 py-2 font-bold cursor-pointer"><Plus color="#fff" />Nouvelle note</button>
             </div>
 
-            <div className="px-5 my-5">
+            <div className="my-5">
                 <SettingDialog/>
+                <ButtonSidebar active={viewMode === "archive"} icon={Archive} onPress={handleShowArchive}>Archive</ButtonSidebar>
+                <ButtonSidebar icon={Trash}>Corbeille</ButtonSidebar>
             </div>
 
             <div className="mt-2">

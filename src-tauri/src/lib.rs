@@ -33,9 +33,17 @@ pub fn run() {
             sql: include_str!("../../drizzle/20260719170104_damp_lethal_legion/migration.sql"),
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 5,
+            description: "Add timestamp to note table",
+            sql: include_str!("../../drizzle/20260722100733_amused_loners/migration.sql"),
+            kind: MigrationKind::Up,
+        },
     ];
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())

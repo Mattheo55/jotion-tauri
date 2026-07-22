@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 import { ContextMenu, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuTrigger } from "./ui/context-menu";
-import { Edit, PackageOpen, Sparkle, Trash, View } from "lucide-react";
+import { Archive, Edit, PackageOpen, Sparkle, Trash, View } from "lucide-react";
 
 interface ContextMenuWrapperProps {
     children: ReactNode;
@@ -10,6 +10,9 @@ interface ContextMenuWrapperProps {
     onView?: () => void;
     onOpen?: () => void;
     onCorrect?: () => void;
+    onArchive?: () => void;
+
+    isArchived?: boolean;
 }
 
 export default function ContextMenuWrapper({
@@ -18,7 +21,10 @@ export default function ContextMenuWrapper({
     onDelete, 
     onView, 
     onOpen, 
-    onCorrect
+    onCorrect,
+    onArchive,
+
+    isArchived
 }: ContextMenuWrapperProps) {
   return (
     <ContextMenu>
@@ -29,6 +35,7 @@ export default function ContextMenuWrapper({
                 {onView && <ContextMenuItem onClick={onView}><View/> Voir</ContextMenuItem>}
                 {onOpen && <ContextMenuItem onClick={onOpen}><PackageOpen/> Ouvrir</ContextMenuItem>}
                 {onCorrect && <ContextMenuItem onClick={onOpen}><Sparkle/> Corriger</ContextMenuItem>}
+                {onArchive && <ContextMenuItem onClick={onArchive}><Archive/> {isArchived ? "Retirer des archives" : "Archiver"}</ContextMenuItem>}
                 {onDelete && <ContextMenuItem onClick={onDelete} variant='destructive'><Trash/> Supprimer</ContextMenuItem>}
             </ContextMenuGroup>
         </ContextMenuContent>

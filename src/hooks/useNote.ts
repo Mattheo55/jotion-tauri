@@ -1,21 +1,44 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { db } from "../db/database";
 import { NoteInsert, noteTable } from "../db/schema";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
+import { ViewMode } from "@/store/navigationStore";
 
 export const NOTES = 'NOTES'
 
 export const useNotes = () => {
     return useQuery({
         queryKey: [NOTES],
-        queryFn: () => db.select().from(noteTable),
+        queryFn: () => db.select().from(noteTable).orderBy(desc(noteTable.created_at)),
     })
 }
 
-export const useNotesByNotebook = (notebookId: number) => {
+export const useNotesByNotebook = (notebookId: number | null, isEnabled: boolean) => {
     return useQuery({
         queryKey: [NOTES, notebookId],
-        queryFn: () => db.select().from(noteTable).where(eq(noteTable.notebook_id, notebookId)).orderBy(desc(noteTable.created_at)),
+        queryFn: () => db.select().from(noteTable).where(eq(noteTable.notebook_id, notebookId!)).orderBy(desc(noteTable.created_at)),
+        enabled: isEnabled
+    })
+}
+
+export const useNoteByView = (view: ViewMode, id?: number) => {
+    return useQuery({
+        queryKey: [NOTES, view, id],
+        queryFn: () => {
+            switch (view) {
+                case "notebook":
+                    return db.select().from(noteTable).where(and(eq(noteTable.notebook_id, id!), eq(noteTable.archive, false))).orderBy(desc(noteTable.created_at));
+                case "archive":
+                    return db.select().from(noteTable).where(eq(noteTable.archive, true)).orderBy(desc(noteTable.created_at))
+            }
+        }
+    })
+}
+
+export const useNoteArchive = () => {
+    return useQuery({
+        queryKey: [NOTES],
+        queryFn: () => db.select().from(noteTable).where(eq(noteTable.archive, true)).orderBy(desc(noteTable.created_at)),
     })
 }
 

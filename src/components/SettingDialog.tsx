@@ -2,26 +2,30 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import { Save, Settings } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 import { Button } from './ui/button'
+import About from './settings/About'
+import ButtonSidebar from './ButtonSidebar'
 
 export default function SettingDialog() {
   return (
     <Dialog>
-        <DialogTrigger>
-            <p className='text-gray-400 flex items-center gap-2 cursor-pointer'><Settings/> Paramètre</p>
+        <DialogTrigger className={"w-full"}>
+            <ButtonSidebar icon={Settings}>Paramètre</ButtonSidebar>
         </DialogTrigger>
         <DialogContent className="sm:max-w-250">
             <DialogHeader>
                 <DialogTitle className={"flex gap-4 items-center text-xl"}><Settings/> Paramètre</DialogTitle>
             </DialogHeader>
 
-            <Tabs className={"h-50"}>
+            <Tabs>
                 <TabsList>
                     <TabsTrigger value={"general"}>Général</TabsTrigger>
                     <TabsTrigger value={"ia"}>IA</TabsTrigger>
+                    <TabsTrigger value={"about"}>À propos</TabsTrigger>
                 </TabsList>
-                <TabsContent value={"general"}>
-                    <p className='flex items-center justify-center text-xl font-bold'>Bientôt disponible</p>
+                <TabsContent value={"general"} className={"mt-5"}>
+                    <p className='flex items-center justify-center text-xl font-semibold'>Bientôt disponible</p>
                 </TabsContent>
+                <TabsContent value={'about'}><About/></TabsContent>
             </Tabs>
 
             <DialogFooter>
