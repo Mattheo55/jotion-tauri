@@ -1,4 +1,4 @@
-import { Archive, FolderPlus, Plus, Trash } from "lucide-react";
+import { Archive, Calendar, FolderPlus, Plus, Trash } from "lucide-react";
 import { useCreateNotebook, useNotebooks, useUpdateNotebook } from "../hooks/useNotebook";
 import NotebookButton from "./NotebookButton";
 import { useState } from "react";
@@ -11,7 +11,6 @@ import TitleMenuButtons from "./TitleMenuButtons";
 import SettingDialog from "./SettingDialog";
 import ButtonSidebar from "./ButtonSidebar";
 import { useNavigationStore } from "@/store/navigationStore";
-import { vi } from "@blocknote/core/locales";
 
 export default function Sidebar() {
     const [isCreating, setIsCreating] = useState<boolean>(false);
@@ -67,6 +66,12 @@ export default function Sidebar() {
         setSelectedNote(null);
     }
 
+    const handleShowCalendar = () => {
+        setNavigationMode('calendar');
+        setSelectedNotbook(null);
+        setSelectedNote(null);
+    }
+
     return (
         <div className='bg-[#181818] w-65' data-tauri-drag-region>
             <div className="flex items-center justify-between p-5" data-tauri-drag-region>
@@ -82,6 +87,7 @@ export default function Sidebar() {
                 <SettingDialog/>
                 <ButtonSidebar active={viewMode === "archive"} icon={Archive} onPress={handleShowArchive}>Archive</ButtonSidebar>
                 <ButtonSidebar icon={Trash}>Corbeille</ButtonSidebar>
+                <ButtonSidebar active={viewMode === "calendar"} onPress={handleShowCalendar} icon={Calendar}>Calendrier</ButtonSidebar>
             </div>
 
             <div className="mt-2">

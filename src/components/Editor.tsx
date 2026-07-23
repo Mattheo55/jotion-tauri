@@ -5,7 +5,7 @@ import { DefaultReactSuggestionItem, getDefaultReactSlashMenuItems, SuggestionMe
 import { BlockNoteView, darkDefaultTheme } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import "@blocknote/core/fonts/inter.css";
-import { BlockNoteEditor, BlockNoteSchema, createCodeBlockSpec, filterSuggestionItems, insertBlocks } from "@blocknote/core";
+import { BlockNoteEditor, BlockNoteSchema, createCodeBlockSpec, filterSuggestionItems } from "@blocknote/core";
 import { createHighlighter } from "./shiki.bundle";
 import { fr } from "@blocknote/core/locales";
 import { convertFileSrc } from '@tauri-apps/api/core';
@@ -13,6 +13,8 @@ import { writeFile, mkdir, exists } from '@tauri-apps/plugin-fs';
 import { appDataDir, join } from '@tauri-apps/api/path';
 import { AlertBlock, insertAlert } from "@/block/AlertBlock";
 import { insertNoteLink, NoteLinkBlock } from "@/block/NoteLinkBlock";
+import { Badge } from "./ui/badge";
+import { Archive } from "lucide-react";
 
 export default function Editor() {
     const [name, setName] = useState<string>("");
@@ -119,13 +121,16 @@ export default function Editor() {
     };
 
     return (
-        <div className="p-5 overflow-y-auto scrollbar-thin scrollbar-thumb-sky-700 scrollbar-track-sky-100">
-            <input
-                className="text-white w-full text-2xl font-bold"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                onKeyDown={handleEventKey}
-            />
+        <div className="py-5 overflow-y-auto scrollbar-thin scrollbar-thumb-sky-700 scrollbar-track-sky-100">
+            <div className="flex px-5 gap-2 items-center">
+                {selectedNote.archive && <Badge><Archive/> Archivé</Badge>}
+                <input
+                    className="text-white w-full text-2xl font-bold"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    onKeyDown={handleEventKey}
+                />
+            </div>
 
             <div className="mt-5">
                 <BlockNoteView editor={editor} theme={jotionTheme} onChange={handleSaveContent} slashMenu={false}>

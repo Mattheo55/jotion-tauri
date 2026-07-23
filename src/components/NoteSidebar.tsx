@@ -1,5 +1,5 @@
 import { useConfirm } from "@/provider/ConfirmerProvider";
-import { useDeleteNote, useNoteByView, useNotes, useUpdateNote } from "../hooks/useNote";
+import { useDeleteNote, useNoteByView, useUpdateNote } from "../hooks/useNote";
 import { useNotebookStore } from "../store/notebookStore"
 import { useNoteStore } from "../store/noteStore";
 import ContextMenuWrapper from "./ContextMenuWrapper";
@@ -20,10 +20,13 @@ export default function NoteSidebar() {
 
   switch (viewMode) {
     case 'notebook':
-      sidebarTitle = selectedNotebook?.name ?? "";
+      sidebarTitle = selectedNotebook?.name ?? "Séléctionner une note";
       break;
     case 'archive':
       sidebarTitle = "Archive";
+      break;
+    default:
+      sidebarTitle = "Séléctionner une note";
       break;
   }
 

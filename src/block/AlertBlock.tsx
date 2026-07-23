@@ -14,7 +14,7 @@ export const AlertBlock = createReactBlockSpec({
 }, {
     render: (props) => {
         return (
-            <div className="flex items-center gap-3 my-2 px-4 h-20 bg-[#313131] text-white rounded w-full">
+            <div className="flex items-center gap-4 my-2 px-4 h-20 bg-[#313131] text-white rounded w-full">
                 <span><TriangleAlert/></span>
                 <div className="font-bold" ref={props.contentRef}/>
             </div>

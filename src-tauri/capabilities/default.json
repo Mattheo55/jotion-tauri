@@ -51,6 +51,10 @@
       ]
     },
     "store:default",
-    "shell:default"
+    "shell:default",
+    {
+      "identifier": "http:default",
+      "allow": [{"url": "https://outlook.office365.com/*"}]
+    }
   ]
 }

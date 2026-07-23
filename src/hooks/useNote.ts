@@ -29,6 +29,8 @@ export const useNoteByView = (view: ViewMode, id?: number) => {
                     return db.select().from(noteTable).where(and(eq(noteTable.notebook_id, id!), eq(noteTable.archive, false))).orderBy(desc(noteTable.created_at));
                 case "archive":
                     return db.select().from(noteTable).where(eq(noteTable.archive, true)).orderBy(desc(noteTable.created_at))
+                case "calendar":
+                    return []
             }
         }
     })

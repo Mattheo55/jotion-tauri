@@ -189,3 +189,46 @@
     @apply font-sans;
   }
 }
+
+/* --- Surcharges pour React Big Calendar (Thème Sombre) --- */
+.rbc-calendar {
+  font-family: inherit;
+}
+/* Le fond des jours et les bordures */
+.rbc-month-view, .rbc-time-view, .rbc-header, .rbc-day-bg, .rbc-month-row, .rbc-time-header {
+  border-color: #3f3f46 !important; /* gris foncé Tailwind */
+}
+.rbc-header {
+  padding: 8px 0;
+  font-weight: 600;
+}
+.rbc-off-range-bg {
+  background-color: #242424 !important; /* Jours du mois précédent/suivant */
+}
+.rbc-today {
+  background-color: #3f3f46 !important; /* Jour actuel */
+}
+/* Le design des événements */
+.rbc-event {
+  background-color: #3b82f6 !important; /* Bleu Tailwind */
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.85rem;
+}
+/* Enlever la bordure bleue affreuse au clic */
+.rbc-active {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.rbc-toolbar button {
+  color: #FFF;
+}
+
+.rbc-day-slot .rbc-time-slot {
+  border-top: transparent;
+}
+
+.rbc-timeslot-group {
+  min-height: 100px;
+}

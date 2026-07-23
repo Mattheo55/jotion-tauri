@@ -4,8 +4,37 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 import { Button } from './ui/button'
 import About from './settings/About'
 import ButtonSidebar from './ButtonSidebar'
+import GeneralSettingsSection from './settings/GeneralSettingsSection'
+import { useEffect, useState } from 'react'
+import { SettingsInterface } from '@/interface/settingsInterface'
+import { getSettings, saveSettings } from '@/service/SettingsService'
 
 export default function SettingDialog() {
+    const [settings, setSettings] = useState<SettingsInterface | null>(null);
+    const [isSaving, setIsSaving] = useState(false);
+
+    useEffect(() => {
+        getSettings().then(setSettings);
+    }, []);
+
+    const handleUpdate = (category: keyof SettingsInterface, key: string, value: any) => {
+        if (!settings) return;
+        setSettings({
+            ...settings,
+            [category]: {
+                ...settings[category],
+                [key]: value
+            }
+        });
+    };
+
+    const handleSave = async () => {
+        if (!settings) return;
+        setIsSaving(true);
+        await saveSettings(settings);
+        setIsSaving(false);
+    };
+
   return (
     <Dialog>
         <DialogTrigger className={"w-full"}>
@@ -16,21 +45,22 @@ export default function SettingDialog() {
                 <DialogTitle className={"flex gap-4 items-center text-xl"}><Settings/> Paramètre</DialogTitle>
             </DialogHeader>
 
-            <Tabs>
+            {settings ? <Tabs>
                 <TabsList>
                     <TabsTrigger value={"general"}>Général</TabsTrigger>
                     <TabsTrigger value={"ia"}>IA</TabsTrigger>
                     <TabsTrigger value={"about"}>À propos</TabsTrigger>
                 </TabsList>
-                <TabsContent value={"general"} className={"mt-5"}>
-                    <p className='flex items-center justify-center text-xl font-semibold'>Bientôt disponible</p>
-                </TabsContent>
-                <TabsContent value={'about'}><About/></TabsContent>
-            </Tabs>
+                <TabsContent value={"general"} className={"mt-5"}><GeneralSettingsSection settings={settings} updateSettings={handleUpdate}/></TabsContent>
+                {/* IA */}
+                    <TabsContent value={'about'}><About/></TabsContent>
+                </Tabs>
+            : <p>Chargement des paramètre ...</p>
+            }
 
             <DialogFooter>
                 <DialogClose><Button variant={"outline"}>Fermer</Button></DialogClose>
-                <Button><Save/> Enregistrer</Button>
+                <Button onClick={handleSave} disabled={isSaving}><Save/> Enregistrer</Button>
             </DialogFooter>
         </DialogContent>
     </Dialog>
