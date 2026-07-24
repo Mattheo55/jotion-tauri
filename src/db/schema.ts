@@ -15,6 +15,7 @@ export const noteTable = sqliteTable('note', {
     content: text().notNull(),
     notebook_id: integer().references(() => notebookTable.id).notNull(),
     archive: integer({mode: 'boolean'}).default(false).notNull(),
+    trash: integer({mode: 'boolean'}).default(false).notNull(),
 
     created_at: integer({mode: "timestamp"}).notNull().$defaultFn(() => new Date()),
     updated_at: integer({mode: "timestamp"}).notNull().$defaultFn(() => new Date()).$onUpdateFn(() => new Date()),

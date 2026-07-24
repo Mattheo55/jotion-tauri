@@ -1,0 +1,1 @@
+ALTER TABLE `note` ADD `trash` integer DEFAULT false NOT NULL;

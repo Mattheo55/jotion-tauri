@@ -14,7 +14,7 @@ import { appDataDir, join } from '@tauri-apps/api/path';
 import { AlertBlock, insertAlert } from "@/block/AlertBlock";
 import { insertNoteLink, NoteLinkBlock } from "@/block/NoteLinkBlock";
 import { Badge } from "./ui/badge";
-import { Archive } from "lucide-react";
+import { Archive, Trash } from "lucide-react";
 
 export default function Editor() {
     const [name, setName] = useState<string>("");
@@ -124,6 +124,7 @@ export default function Editor() {
         <div className="py-5 overflow-y-auto scrollbar-thin scrollbar-thumb-sky-700 scrollbar-track-sky-100">
             <div className="flex px-5 gap-2 items-center">
                 {selectedNote.archive && <Badge><Archive/> Archivé</Badge>}
+                {selectedNote.trash && <Badge variant={"destructive"}><Trash/> Corbeille</Badge>}
                 <input
                     className="text-white w-full text-2xl font-bold"
                     value={name}

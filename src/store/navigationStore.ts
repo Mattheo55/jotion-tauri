@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type ViewMode = 'notebook' | 'archive' | 'calendar'
+export type ViewMode = 'notebook' | 'archive' | 'calendar' | 'trash'
 
 interface NavigationState {
     viewMode: ViewMode;

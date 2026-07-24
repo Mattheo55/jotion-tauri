@@ -26,10 +26,12 @@ export const useNoteByView = (view: ViewMode, id?: number) => {
         queryFn: () => {
             switch (view) {
                 case "notebook":
-                    return db.select().from(noteTable).where(and(eq(noteTable.notebook_id, id!), eq(noteTable.archive, false))).orderBy(desc(noteTable.created_at));
+                    return db.select().from(noteTable).where(and(eq(noteTable.notebook_id, id!), eq(noteTable.archive, false), eq(noteTable.trash, false))).orderBy(desc(noteTable.created_at));
                 case "archive":
                     return db.select().from(noteTable).where(eq(noteTable.archive, true)).orderBy(desc(noteTable.created_at))
-                case "calendar":
+                case "trash":
+                    return db.select().from(noteTable).where(eq(noteTable.trash, true)).orderBy(desc(noteTable.created_at))
+                    case "calendar":
                     return []
             }
         }

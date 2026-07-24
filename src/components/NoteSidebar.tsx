@@ -25,6 +25,9 @@ export default function NoteSidebar() {
     case 'archive':
       sidebarTitle = "Archive";
       break;
+    case 'trash':
+      sidebarTitle = "Corbeille";
+      break;
     default:
       sidebarTitle = "Séléctionner une note";
       break;
@@ -36,9 +39,15 @@ export default function NoteSidebar() {
   const confirm = useConfirm();
 
   const handleDelete = async (note: Note) => {
+    if(note.trash === false) {
+      updateNote({id: note.id, trash: true})
+      setSelectedNote(null);
+      return;
+    }
+
     const isConfirm = await confirm({
       title: `Supprimée ${note.name}`,
-      description: 'Voulez vous vraimant supprimer cette note ?',
+      description: 'Voulez vous vraimant supprimer définitevement cette note ?',
     });
 
     if (isConfirm) {
@@ -47,15 +56,19 @@ export default function NoteSidebar() {
     }
   }
 
+  const handleRestoreNote = (id: number) => {
+    updateNote({id: id, trash: false});
+    setSelectedNote(null);
+  }
+
   const handleArchiveNote = (note: Note) => {
     if(selectedNote && selectedNote.id === note.id) {
       setSelectedNote(null);
     }
 
     updateNote({id: note.id, archive: !note.archive});
-
-    console.log("archive")
   }
+
 
   return (
     <div className='h-full w-70 bg-[#1C1C1C] p-5'>
@@ -68,8 +81,10 @@ export default function NoteSidebar() {
               onDelete={() => handleDelete(n)} 
               onCorrect={() => { }}
               onArchive={() => handleArchiveNote(n)}
+              onRestore={() => handleRestoreNote(n.id)}
 
               isArchived={n.archive}
+              isTrashed={n.trash}
             >
               <NoteButton note={n} onPress={() => setSelectedNote(n)} active={n.id === selectedNote?.id} />
             </ContextMenuWrapper>

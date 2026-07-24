@@ -39,6 +39,12 @@ pub fn run() {
             sql: include_str!("../../drizzle/20260722100733_amused_loners/migration.sql"),
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 6,
+            description: "Add trash to note table",
+            sql: include_str!("../../drizzle/20260724073734_luxuriant_rhodey/migration.sql"),
+            kind: MigrationKind::Up,
+        },
     ];
 
     tauri::Builder::default()

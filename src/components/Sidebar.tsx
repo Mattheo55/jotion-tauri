@@ -1,5 +1,5 @@
 import { Archive, Calendar, FolderPlus, Plus, Trash } from "lucide-react";
-import { useCreateNotebook, useNotebooks, useUpdateNotebook } from "../hooks/useNotebook";
+import { useCreateNotebook, useDeleteNotebook, useNotebooks, useUpdateNotebook } from "../hooks/useNotebook";
 import NotebookButton from "./NotebookButton";
 import { useState } from "react";
 import { useNotebookStore } from "../store/notebookStore";
@@ -11,6 +11,7 @@ import TitleMenuButtons from "./TitleMenuButtons";
 import SettingDialog from "./SettingDialog";
 import ButtonSidebar from "./ButtonSidebar";
 import { useNavigationStore } from "@/store/navigationStore";
+import { useConfirm } from "@/provider/ConfirmerProvider";
 
 export default function Sidebar() {
     const [isCreating, setIsCreating] = useState<boolean>(false);
@@ -20,6 +21,7 @@ export default function Sidebar() {
     const { mutate } = useCreateNotebook();
     const { mutate: createNote } = useCreateNote();
     const { mutate: updateNotebook } = useUpdateNotebook();
+    const {mutate: deleteNotebook} = useDeleteNotebook();
 
     const selectedNotebook = useNotebookStore((state) => state.selectedNotebook)
     const setSelectedNotbook = useNotebookStore((state) => state.setSelecedNote);
@@ -27,6 +29,8 @@ export default function Sidebar() {
     const viewMode = useNavigationStore((state) => state.viewMode);
 
     const setSelectedNote = useNoteStore((state) => state.setSelectedNote);
+
+    const confirm = useConfirm();
 
     const handleConfirmNotebookCreate = (name: string) => {
         setIsCreating(false);
@@ -52,6 +56,21 @@ export default function Sidebar() {
         })
     }
 
+    const handleDeleteNotebook = async (id: number) => {
+        const isComfirm = await confirm({
+            title: "Supprimer un carnet",
+            description: "Voulez vous vraimant supprimer ce carnet ?"
+        });
+
+        if(isComfirm) {
+            deleteNotebook(id);
+            if(selectedNotebook && selectedNotebook.id === id) {
+                setSelectedNotbook(null);
+                setSelectedNote(null);
+            }
+        }
+    }
+
     const handleChangeNotebook = (n: Notebook) => {
         if (n.id === selectedNotebook?.id) return;
 
@@ -72,6 +91,12 @@ export default function Sidebar() {
         setSelectedNote(null);
     }
 
+    const handleShowTrash = () => {
+        setNavigationMode('trash');
+        setSelectedNotbook(null);
+        setSelectedNote(null);
+    }
+
     return (
         <div className='bg-[#181818] w-65' data-tauri-drag-region>
             <div className="flex items-center justify-between p-5" data-tauri-drag-region>
@@ -86,7 +111,7 @@ export default function Sidebar() {
             <div className="my-5">
                 <SettingDialog/>
                 <ButtonSidebar active={viewMode === "archive"} icon={Archive} onPress={handleShowArchive}>Archive</ButtonSidebar>
-                <ButtonSidebar icon={Trash}>Corbeille</ButtonSidebar>
+                <ButtonSidebar active={viewMode === "trash"} icon={Trash} onPress={handleShowTrash}>Corbeille</ButtonSidebar>
                 <ButtonSidebar active={viewMode === "calendar"} onPress={handleShowCalendar} icon={Calendar}>Calendrier</ButtonSidebar>
             </div>
 
@@ -102,7 +127,7 @@ export default function Sidebar() {
                             <ContextMenuWrapper
                                 key={n.id}
                                 onRename={() => setRenamingId(n.id)}
-                                onDelete={() => { }}
+                                onDelete={() => handleDeleteNotebook(n.id)}
                             >
                                 <NotebookButton notebook={n} onPress={() => handleChangeNotebook(n)} onRenaming={(newName) => handleConfirmRenaiming(newName)} onBlur={() => setRenamingId(null)} active={n.id === selectedNotebook?.id} renaming={renamingId === n.id} />
                             </ContextMenuWrapper>
