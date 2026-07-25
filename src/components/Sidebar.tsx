@@ -1,4 +1,4 @@
-import { Archive, Calendar, FolderPlus, Plus, Trash } from "lucide-react";
+import { Archive, Calendar1, FolderPlus, Plus, Trash } from "lucide-react";
 import { useCreateNotebook, useDeleteNotebook, useNotebooks, useUpdateNotebook } from "../hooks/useNotebook";
 import NotebookButton from "./NotebookButton";
 import { useState } from "react";
@@ -12,6 +12,7 @@ import SettingDialog from "./SettingDialog";
 import ButtonSidebar from "./ButtonSidebar";
 import { useNavigationStore } from "@/store/navigationStore";
 import { useConfirm } from "@/provider/ConfirmerProvider";
+import JotionCommand from "./JotionCommand";
 
 export default function Sidebar() {
     const [isCreating, setIsCreating] = useState<boolean>(false);
@@ -24,7 +25,7 @@ export default function Sidebar() {
     const {mutate: deleteNotebook} = useDeleteNotebook();
 
     const selectedNotebook = useNotebookStore((state) => state.selectedNotebook)
-    const setSelectedNotbook = useNotebookStore((state) => state.setSelecedNote);
+    const setSelectedNotbook = useNotebookStore((state) => state.setSelecedNotebook);
     const setNavigationMode = useNavigationStore((state) => state.setSelectedMode);
     const viewMode = useNavigationStore((state) => state.viewMode);
 
@@ -112,7 +113,8 @@ export default function Sidebar() {
                 <SettingDialog/>
                 <ButtonSidebar active={viewMode === "archive"} icon={Archive} onPress={handleShowArchive}>Archive</ButtonSidebar>
                 <ButtonSidebar active={viewMode === "trash"} icon={Trash} onPress={handleShowTrash}>Corbeille</ButtonSidebar>
-                <ButtonSidebar active={viewMode === "calendar"} onPress={handleShowCalendar} icon={Calendar}>Calendrier</ButtonSidebar>
+                <ButtonSidebar active={viewMode === "calendar"} onPress={handleShowCalendar} icon={Calendar1}>Calendrier</ButtonSidebar>
+                <JotionCommand/>
             </div>
 
             <div className="mt-2">

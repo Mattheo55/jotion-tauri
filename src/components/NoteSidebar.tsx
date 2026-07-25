@@ -71,9 +71,9 @@ export default function NoteSidebar() {
 
 
   return (
-    <div className='h-full w-70 bg-[#1C1C1C] p-5'>
-      <p className='text-white text-2xl'>{sidebarTitle}</p>
-      <div className="mt-5 gap-4 flex flex-col">
+    <div className='h-full w-70 bg-[#1C1C1C] overflow-y-hidden'>
+      <p className='text-white text-2xl p-5'>{sidebarTitle}</p>
+      <div className="gap-4 flex flex-col h-full p-5 overflow-y-auto">
         {
           notes.map(n => (
             <ContextMenuWrapper 

@@ -68,3 +68,11 @@ export const useDeleteNote = () => {
         onSuccess: () => queryClient.invalidateQueries({queryKey: [NOTES]})
     })
 }
+
+export const useDeleteNoteInTrash = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async () => await db.delete(noteTable).where(eq(noteTable.trash, true)),
+        onSuccess: () => queryClient.invalidateQueries({queryKey: [NOTES]})
+    })
+}

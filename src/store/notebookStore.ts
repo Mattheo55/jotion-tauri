@@ -3,10 +3,10 @@ import { Notebook } from "../db/schema";
 
 interface NotebookStore {
     selectedNotebook: Notebook | null;
-    setSelecedNote: (n: Notebook | null) => void;
+    setSelecedNotebook: (n: Notebook | null) => void;
 }
 
 export const useNotebookStore = create<NotebookStore>((set) => ({
     selectedNotebook: null,
-    setSelecedNote: (n: Notebook | null) => set((state) => ({selectedNotebook: state.selectedNotebook = n}))
+    setSelecedNotebook: (n: Notebook | null) => set((state) => ({selectedNotebook: state.selectedNotebook = n}))
 }))

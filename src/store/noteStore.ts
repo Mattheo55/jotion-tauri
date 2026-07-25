@@ -8,5 +8,5 @@ interface NoteStore {
 
 export const useNoteStore = create<NoteStore>((set) => ({
     selectedNote: null,
-    setSelectedNote: (note: Note | null) => set((state) => ({selectedNote: state.selectedNote = note}))
+    setSelectedNote: (note: Note | null) => set({selectedNote: note})
 }))
