@@ -1,4 +1,4 @@
-import { KeyboardEvent, useEffect, useRef, useState } from "react";
+import { KeyboardEvent, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useNoteStore } from "../store/noteStore";
 import { useUpdateNote } from "../hooks/useNote";
 import { DefaultReactSuggestionItem, getDefaultReactSlashMenuItems, SuggestionMenuController, useCreateBlockNote } from "@blocknote/react";
@@ -15,12 +15,23 @@ import { AlertBlock, insertAlert } from "@/block/AlertBlock";
 import { insertNoteLink, NoteLinkBlock } from "@/block/NoteLinkBlock";
 import { Badge } from "./ui/badge";
 import { Archive, Trash } from "lucide-react";
+import { generateTextWithAI } from "@/service/AiService";
+import { SettingsInterface } from "@/interface/settingsInterface";
+import { toast } from "./ui/toast";
+import { getSettings } from "@/service/SettingsService";
+import { ref } from "node:process";
 
 export default function Editor() {
     const [name, setName] = useState<string>("");
     const selectedNote = useNoteStore((state) => state.selectedNote);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [settings, setSettings] = useState<SettingsInterface | null>(null);
 
     const { mutate } = useUpdateNote();
+
+    useEffect(() => {
+        getSettings().then(setSettings);
+    }, [])
 
     async function uploadLocalFile(file: File): Promise<string> {
     try {
@@ -91,6 +102,10 @@ export default function Editor() {
         }
     }, [selectedNote]);
 
+    useImperativeHandle(ref, () => {
+        
+    })
+
     if (!selectedNote) return;
 
     const handleEventKey = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -120,24 +135,55 @@ export default function Editor() {
         }, 1000);
     };
 
-    return (
-        <div className="py-5 overflow-y-auto scrollbar-thin scrollbar-thumb-sky-700 scrollbar-track-sky-100">
-            <div className="flex px-5 gap-2 items-center">
-                {selectedNote.archive && <Badge><Archive/> Archivé</Badge>}
-                {selectedNote.trash && <Badge variant={"destructive"}><Trash/> Corbeille</Badge>}
-                <input
-                    className="text-white w-full text-2xl font-bold"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    onKeyDown={handleEventKey}
-                />
-            </div>
+    const handleCorrect = async () => {
+        const selection = editor.getSelection();
+        const blockToCorrect = selection ? selection.blocks : [editor.getTextCursorPosition().block];
 
-            <div className="mt-5">
-                <BlockNoteView editor={editor} theme={jotionTheme} onChange={handleSaveContent} slashMenu={false}>
-                    <SuggestionMenuController triggerCharacter="/" getItems={async (query) => filterSuggestionItems(getCustomSlashMenuItems(editor as any), query)}/>
-                </BlockNoteView>
+        if(!settings?.api.apiKey) return;
+        setIsLoading(true);
+
+        try {
+            const markdownText = await editor.blocksToMarkdownLossy(blockToCorrect);
+            const prompt = `Corrige l'orthographe de ce texte. 
+                Règle ABSOLUE : Tu dois conserver exactement le même formatage Markdown (**, _, liens, etc.). 
+                Ne renvoie QUE le texte corrigé, sans introduction.\n\n${markdownText}`;
+
+            const correctedMarkdown = await generateTextWithAI(prompt, settings.api.apiKey);
+            const newJsonBlocks = await editor.tryParseMarkdownToBlocks(correctedMarkdown);
+            
+            if(selection) {
+                editor.replaceBlocks(blockToCorrect, newJsonBlocks);
+            } else {
+            editor.replaceBlocks([editor.getTextCursorPosition().block], newJsonBlocks);
+            }
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue s'est produite";
+            toast.add({type: "error", title: "Une erreur est survenue", description: errorMessage})
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    return (
+        <>
+            <div className="py-5 overflow-y-auto scrollbar-thin scrollbar-thumb-sky-700 scrollbar-track-sky-100">
+                <div className="flex px-5 gap-2 items-center">
+                    {selectedNote.archive && <Badge><Archive/> Archivé</Badge>}
+                    {selectedNote.trash && <Badge variant={"destructive"}><Trash/> Corbeille</Badge>}
+                    <input
+                        className="text-white w-full text-2xl font-bold"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        onKeyDown={handleEventKey}
+                    />
+                </div>
+
+                <div className="mt-5">
+                    <BlockNoteView editor={editor} theme={jotionTheme} onChange={handleSaveContent} slashMenu={false}>
+                        <SuggestionMenuController triggerCharacter="/" getItems={async (query) => filterSuggestionItems(getCustomSlashMenuItems(editor as any), query)}/>
+                    </BlockNoteView>
+                </div>
             </div>
-        </div>
+        </>
     );
 }
