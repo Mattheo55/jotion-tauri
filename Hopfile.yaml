@@ -9,3 +9,8 @@ tasks:
   studio:
     run: |
       npx drizzle-kit studio
+  build-win:
+    comment: Build l'application en mode release (Windows)
+    run: |
+      npm run tauri build
+      explorer .\src-tauri\target\release\bundle\msi

@@ -1,4 +1,4 @@
-import { KeyboardEvent, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useNoteStore } from "../store/noteStore";
 import { useUpdateNote } from "../hooks/useNote";
 import { DefaultReactSuggestionItem, getDefaultReactSlashMenuItems, SuggestionMenuController, useCreateBlockNote } from "@blocknote/react";
@@ -19,12 +19,11 @@ import { generateTextWithAI } from "@/service/AiService";
 import { SettingsInterface } from "@/interface/settingsInterface";
 import { toast } from "./ui/toast";
 import { getSettings } from "@/service/SettingsService";
-import { ref } from "node:process";
 
 export default function Editor() {
     const [name, setName] = useState<string>("");
     const selectedNote = useNoteStore((state) => state.selectedNote);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [_, setIsLoading] = useState<boolean>(false);
     const [settings, setSettings] = useState<SettingsInterface | null>(null);
 
     const { mutate } = useUpdateNote();
@@ -101,10 +100,6 @@ export default function Editor() {
             setName(selectedNote.name);
         }
     }, [selectedNote]);
-
-    useImperativeHandle(ref, () => {
-        
-    })
 
     if (!selectedNote) return;
 
