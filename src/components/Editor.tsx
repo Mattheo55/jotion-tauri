@@ -161,7 +161,7 @@ export default function Editor() {
 
     return (
         <>
-            <div className="py-5 overflow-y-auto scrollbar-thin scrollbar-thumb-sky-700 scrollbar-track-sky-100">
+            <div className="py-5 overflow-y-auto scrollbar-thin scrollbar-thumb-sky-700 scrollbar-track-sky-100 break-all">
                 <div className="flex px-5 gap-2 items-center">
                     {selectedNote.archive && <Badge><Archive/> Archivé</Badge>}
                     {selectedNote.trash && <Badge variant={"destructive"}><Trash/> Corbeille</Badge>}

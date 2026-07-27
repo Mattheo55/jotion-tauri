@@ -18,7 +18,7 @@ export default function App() {
       return (
         <>
           <NoteSidebar/>
-          <div className='bg-[#181818] h-full flex flex-col flex-1 border'>
+          <div className='bg-[#181818] h-full flex flex-col flex-1'>
             {selectedNote ? <Editor key={selectedNote.id} /> : <EmptyState/>}
           </div>
         </>
