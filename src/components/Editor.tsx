@@ -1,36 +1,33 @@
-import { KeyboardEvent, useEffect, useRef, useState } from "react";
-import { useNoteStore } from "../store/noteStore";
-import { useUpdateNote } from "../hooks/useNote";
-import { DefaultReactSuggestionItem, getDefaultReactSlashMenuItems, SuggestionMenuController, useCreateBlockNote } from "@blocknote/react";
-import { BlockNoteView, darkDefaultTheme } from "@blocknote/mantine";
-import "@blocknote/mantine/style.css";
-import "@blocknote/core/fonts/inter.css";
-import { BlockNoteEditor, BlockNoteSchema, createCodeBlockSpec, filterSuggestionItems } from "@blocknote/core";
-import { createHighlighter } from "./shiki.bundle";
-import { fr } from "@blocknote/core/locales";
-import { convertFileSrc } from '@tauri-apps/api/core';
-import { writeFile, mkdir, exists } from '@tauri-apps/plugin-fs';
-import { appDataDir, join } from '@tauri-apps/api/path';
 import { AlertBlock, insertAlert } from "@/block/AlertBlock";
 import { insertNoteLink, NoteLinkBlock } from "@/block/NoteLinkBlock";
-import { Badge } from "./ui/badge";
+import { useNotebookById } from "@/hooks/useNotebook";
+import { useNavigationStore } from "@/store/navigationStore";
+import { useNotebookStore } from "@/store/notebookStore";
+import { BlockNoteEditor, BlockNoteSchema, createCodeBlockSpec, filterSuggestionItems } from "@blocknote/core";
+import "@blocknote/core/fonts/inter.css";
+import { fr } from "@blocknote/core/locales";
+import { BlockNoteView, darkDefaultTheme } from "@blocknote/mantine";
+import "@blocknote/mantine/style.css";
+import { DefaultReactSuggestionItem, getDefaultReactSlashMenuItems, SuggestionMenuController, useCreateBlockNote } from "@blocknote/react";
+import { convertFileSrc } from '@tauri-apps/api/core';
+import { appDataDir, join } from '@tauri-apps/api/path';
+import { exists, mkdir, writeFile } from '@tauri-apps/plugin-fs';
 import { Archive, Trash } from "lucide-react";
-import { generateTextWithAI } from "@/service/AiService";
-import { SettingsInterface } from "@/interface/settingsInterface";
-import { toast } from "./ui/toast";
-import { getSettings } from "@/service/SettingsService";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
+import { useUpdateNote } from "../hooks/useNote";
+import { useNoteStore } from "../store/noteStore";
+import { createHighlighter } from "./shiki.bundle";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 
 export default function Editor() {
     const [name, setName] = useState<string>("");
     const selectedNote = useNoteStore((state) => state.selectedNote);
-    const [_, setIsLoading] = useState<boolean>(false);
-    const [settings, setSettings] = useState<SettingsInterface | null>(null);
-
+    const selectedNotebook = useNotebookStore((state) => state.selectedNotebook);
+    const setSelectedNotebook = useNotebookStore((state) => state.setSelecedNotebook);
+    const setSelectNavigation = useNavigationStore((state) => state.setSelectedMode)
     const { mutate } = useUpdateNote();
-
-    useEffect(() => {
-        getSettings().then(setSettings);
-    }, [])
+    const {data: notebook} = useNotebookById(selectedNote?.notebook_id);
 
     async function uploadLocalFile(file: File): Promise<string> {
     try {
@@ -75,6 +72,8 @@ export default function Editor() {
                         python: { name: "Python", aliases: ["py"] },
                         rust: { name: "Rust", aliases: ["rs"] },
                         php: { name: "PHP", aliases: ["php"] },
+                        yaml: { name: "Yaml", aliases: ['yaml'] },
+                        json: { name: "JSON", aliases: ['json'] },
                     },
                     createHighlighter: () => createHighlighter({themes: ["dark-plus"], langs: []})
                 })
@@ -89,7 +88,6 @@ export default function Editor() {
             insertAlert(editor),
             insertNoteLink(editor),
         ];      
-
 
     const jotionTheme = {...darkDefaultTheme, colors: {...darkDefaultTheme.colors, editor: {background: '#181818'}}};
 
@@ -130,41 +128,21 @@ export default function Editor() {
         }, 1000);
     };
 
-    const handleCorrect = async () => {
-        const selection = editor.getSelection();
-        const blockToCorrect = selection ? selection.blocks : [editor.getTextCursorPosition().block];
-
-        if(!settings?.api.apiKey) return;
-        setIsLoading(true);
-
-        try {
-            const markdownText = await editor.blocksToMarkdownLossy(blockToCorrect);
-            const prompt = `Corrige l'orthographe de ce texte. 
-                Règle ABSOLUE : Tu dois conserver exactement le même formatage Markdown (**, _, liens, etc.). 
-                Ne renvoie QUE le texte corrigé, sans introduction.\n\n${markdownText}`;
-
-            const correctedMarkdown = await generateTextWithAI(prompt, settings.api.apiKey);
-            const newJsonBlocks = await editor.tryParseMarkdownToBlocks(correctedMarkdown);
-            
-            if(selection) {
-                editor.replaceBlocks(blockToCorrect, newJsonBlocks);
-            } else {
-            editor.replaceBlocks([editor.getTextCursorPosition().block], newJsonBlocks);
-            }
-        } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue s'est produite";
-            toast.add({type: "error", title: "Une erreur est survenue", description: errorMessage})
-        } finally {
-            setIsLoading(false);
-        }
+    const handleChangeNotebook = () => {
+        if(!notebook) return;
+        setSelectNavigation('notebook');
+        setSelectedNotebook(notebook);
     }
 
     return (
         <>
             <div className="py-5 overflow-y-auto scrollbar-thin scrollbar-thumb-sky-700 scrollbar-track-sky-100 break-all">
-                <div className="flex px-5 gap-2 items-center">
+                <div className="flex px-5 gap-2 items-center pl-10">
                     {selectedNote.archive && <Badge><Archive/> Archivé</Badge>}
                     {selectedNote.trash && <Badge variant={"destructive"}><Trash/> Corbeille</Badge>}
+                    {selectedNote.notebook_id !== selectedNotebook?.id && !selectedNote.trash && !selectedNote.archive &&
+                        (<Button onClick={handleChangeNotebook}>{notebook?.name}</Button>)
+                    }
                     <input
                         className="text-white w-full text-2xl font-bold"
                         value={name}

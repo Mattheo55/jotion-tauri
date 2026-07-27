@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { count, desc, eq } from "drizzle-orm";
 import { db } from "../db/database";
 import { NotebookInsert, notebookTable, noteTable } from "../db/schema";
-import { count, desc, eq } from "drizzle-orm";
 
 const NOTEBOOKS = "notebooks"
 
@@ -11,6 +11,18 @@ export const useNotebooks = () => {
         queryFn: () => db.select().from(notebookTable).orderBy(desc(notebookTable.id))
     })
 } 
+
+export const useNotebookById = (id?: number) => {
+    return useQuery({
+        queryKey: [NOTEBOOKS, id],
+        queryFn: async () => {
+            if(!id) return;
+            const [notebook] = await db.select().from(notebookTable).where(eq(notebookTable.id, id));
+            return notebook;
+        },
+        enabled: !!id
+    })
+}
 
 export const useNotebookNoteCount = (id: number) => {
     return useQuery({

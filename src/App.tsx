@@ -1,10 +1,11 @@
 import Calendar from './components/Calendar';
 import Editor from './components/Editor';
-import EmptyState from './components/EmptyState'
-import NoteSidebar from './components/NoteSidebar'
-import Sidebar from './components/Sidebar'
+import EmptyState from './components/EmptyState';
+import NoteSidebar from './components/NoteSidebar';
+import Sidebar from './components/Sidebar';
+import { Toaster } from './components/ui/toast';
 import { useNavigationStore } from './store/navigationStore';
-import { useNoteStore } from './store/noteStore'
+import { useNoteStore } from './store/noteStore';
 
 export default function App() {
   const selectedNote = useNoteStore((state) => state.selectedNote);
@@ -32,6 +33,7 @@ export default function App() {
       <div className='flex flex-1'>
         {render()}
       </div>
+      <Toaster/>
     </main>
   )
 }

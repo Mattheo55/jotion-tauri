@@ -26,6 +26,8 @@ type BundledLanguage =
   | 'rust'
   | 'rs'
   | 'php'
+  | 'yaml'
+  | 'json'
 type BundledTheme = 'dark-plus'
 type Highlighter = HighlighterGeneric<BundledLanguage, BundledTheme>
 
@@ -45,6 +47,9 @@ const bundledLanguages = {
   rust: () => import('@shikijs/langs-precompiled/rust'),
   rs: () => import('@shikijs/langs-precompiled/rust'),
   php: () => import('@shikijs/langs-precompiled/php'),
+  yaml: () => import('@shikijs/langs-precompiled/yaml'),
+  json: () => import('@shikijs/langs-precompiled/json'),
+  
 } as Record<BundledLanguage, DynamicImportLanguageRegistration>
 
 const bundledThemes = {

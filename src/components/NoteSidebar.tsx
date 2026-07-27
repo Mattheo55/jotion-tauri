@@ -1,13 +1,18 @@
+import { Note } from "@/db/schema";
 import { useConfirm } from "@/provider/ConfirmerProvider";
+import { useNavigationStore } from "@/store/navigationStore";
+import clsx from "clsx";
+import { SidebarClose, SidebarOpen } from "lucide-react";
 import { useDeleteNote, useNoteByView, useUpdateNote } from "../hooks/useNote";
-import { useNotebookStore } from "../store/notebookStore"
+import { useNotebookStore } from "../store/notebookStore";
 import { useNoteStore } from "../store/noteStore";
 import ContextMenuWrapper from "./ContextMenuWrapper";
 import NoteButton from "./NoteButton";
-import { Note } from "@/db/schema";
-import { useNavigationStore } from "@/store/navigationStore";
 
 export default function NoteSidebar() {
+  const isNoteSidebarOpen = useNavigationStore((state) => state.isNoteSidebarOpen);
+  const toggleSidebarOpen = useNavigationStore((state) => state.toggleNoteSidebarOpen)
+
   const viewMode = useNavigationStore((state) => state.viewMode);
   const selectedNotebook = useNotebookStore((state) => state.selectedNotebook);
 
@@ -71,9 +76,12 @@ export default function NoteSidebar() {
 
 
   return (
-    <div className='h-full w-70 bg-[#1C1C1C] overflow-y-hidden'>
+    <div className="relative">
+      <button className="absolute top-5 -right-8 z-10" onClick={toggleSidebarOpen}>{isNoteSidebarOpen ? <SidebarClose/> : <SidebarOpen/>}</button>
+    <div className={clsx('h-full bg-[#1C1C1C] overflow-y-hidden transition-all', isNoteSidebarOpen ? "w-70" : "w-0")}>
+      
       <p className='text-white text-2xl p-5'>{sidebarTitle}</p>
-      <div className="gap-4 flex flex-col h-full p-5 overflow-y-auto">
+      <div className="gap-4 flex flex-col h-full px-5 overflow-y-auto">
         {
           notes.map(n => (
             <ContextMenuWrapper 
@@ -91,6 +99,7 @@ export default function NoteSidebar() {
           ))
         }
       </div>
+    </div>
     </div>
   )
 }

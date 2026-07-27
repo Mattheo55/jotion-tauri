@@ -6,7 +6,7 @@ export default function About() {
     <div className="flex flex-col gap-3 my-5 select-none">
       <p><strong>Licence :</strong> MIT</p>
       <p><strong>Auteur :</strong> Matthéo BIGORGNE</p>
-      <p><strong>Version :</strong> 0.1.1-dev</p>
+      <p><strong>Version :</strong> 0.2.0-dev</p>
       <p><strong>IA :</strong> Gemini</p>
       <p><strong>Information IA :</strong> Il est recommandé d'utiliser une clé API sans moyen de paiement associé pour éviter tout coût imprévu.</p>
       <p><strong>Technologies :</strong> TypeScript, React, Tauri, Rust</p>
