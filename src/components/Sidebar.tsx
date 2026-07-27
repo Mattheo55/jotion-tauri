@@ -1,18 +1,18 @@
-import { Archive, Calendar1, FolderPlus, Plus, Trash } from "lucide-react";
-import { useCreateNotebook, useDeleteNotebook, useNotebooks, useUpdateNotebook } from "../hooks/useNotebook";
-import NotebookButton from "./NotebookButton";
-import { useState } from "react";
-import { useNotebookStore } from "../store/notebookStore";
-import { useCreateNote } from "../hooks/useNote";
-import { useNoteStore } from "../store/noteStore";
-import { Notebook } from "../db/schema";
-import ContextMenuWrapper from "./ContextMenuWrapper";
-import TitleMenuButtons from "./TitleMenuButtons";
-import SettingDialog from "./SettingDialog";
-import ButtonSidebar from "./ButtonSidebar";
-import { useNavigationStore } from "@/store/navigationStore";
 import { useConfirm } from "@/provider/ConfirmerProvider";
+import { useNavigationStore } from "@/store/navigationStore";
+import { Archive, Calendar1, FolderPlus, Plus, Trash } from "lucide-react";
+import { useState } from "react";
+import { Notebook } from "../db/schema";
+import { useCreateNote } from "../hooks/useNote";
+import { useCreateNotebook, useDeleteNotebook, useNotebooks, useUpdateNotebook } from "../hooks/useNotebook";
+import { useNotebookStore } from "../store/notebookStore";
+import { useNoteStore } from "../store/noteStore";
+import ButtonSidebar from "./ButtonSidebar";
+import ContextMenuWrapper from "./ContextMenuWrapper";
 import JotionCommand from "./JotionCommand";
+import NotebookButton from "./NotebookButton";
+import SettingDialog from "./SettingDialog";
+import TitleMenuButtons from "./TitleMenuButtons";
 
 export default function Sidebar() {
     const [isCreating, setIsCreating] = useState<boolean>(false);

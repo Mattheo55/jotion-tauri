@@ -1,3 +1,4 @@
+import { useHotkeys } from "react-hotkeys-hook";
 import Calendar from './components/Calendar';
 import Editor from './components/Editor';
 import EmptyState from './components/EmptyState';
@@ -10,6 +11,11 @@ import { useNoteStore } from './store/noteStore';
 export default function App() {
   const selectedNote = useNoteStore((state) => state.selectedNote);
   const viewMode = useNavigationStore((state) => state.viewMode);
+  const toggleNoteSidebar = useNavigationStore((state) => state.toggleNoteSidebarOpen);
+  const toggleCommandeDialog = useNavigationStore((state) => state.toggleCommandDialogOpen);
+
+  useHotkeys('ctrl+s', toggleNoteSidebar);
+  useHotkeys('ctrl+Period', toggleCommandeDialog);
 
   const render = () => {switch (viewMode) {
     case "calendar":

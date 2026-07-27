@@ -1,11 +1,10 @@
 import { Note } from "@/db/schema";
-import { useDeleteNoteInTrash, useNotes } from "@/hooks/useNote";
+import { useCreateNote, useDeleteNoteInTrash, useNotes } from "@/hooks/useNote";
 import { useConfirm } from "@/provider/ConfirmerProvider";
 import { useNavigationStore } from "@/store/navigationStore";
 import { useNotebookStore } from "@/store/notebookStore";
 import { useNoteStore } from "@/store/noteStore";
-import { Calendar1, CommandIcon, File, Trash } from "lucide-react";
-import { useState } from "react";
+import { Calendar1, CommandIcon, File, FilePlusCorner, Trash } from "lucide-react";
 import ButtonSidebar from "./ButtonSidebar";
 import {
     Command,
@@ -18,14 +17,19 @@ import {
 import { toast } from "./ui/toast";
 
 export default function JotionCommand() {
-    const [open, setOpen] = useState<boolean>(false);
+    const open = useNavigationStore((state) => state.isCommandDiologOpen);
+    const setOpen = useNavigationStore((state) => state.setCommandDialogOpen);
 
     const confirmer = useConfirm();
+
+    const selectedNotebook = useNotebookStore((state) => state.selectedNotebook);
 
     const setSelectedNote = useNoteStore((state) => state.setSelectedNote);
     const setSelectedNotebook = useNotebookStore((state) => state.setSelecedNotebook);
     const setSelectedNotebookById = useNotebookStore((state) => state.setSelecedNotebookById);
     const setSelectedMode = useNavigationStore((state) => state.setSelectedMode);
+
+    const { mutate: createNote } = useCreateNote();
 
     const { mutate: deleteNoteInTrash } = useDeleteNoteInTrash();
     const {data: notes = []} = useNotes();
@@ -57,6 +61,17 @@ export default function JotionCommand() {
         setOpen(false);
     }
 
+    const handleCreateNote = () => {
+        if (!selectedNotebook) return;
+        createNote({
+            notebook_id: selectedNotebook.id,
+            name: "Sans titre",
+            content: "",
+        });
+        
+        setOpen(false);
+    }
+
     return (
         <>
             <ButtonSidebar icon={CommandIcon} onPress={() => setOpen(true)}>
@@ -67,6 +82,7 @@ export default function JotionCommand() {
                     <CommandInput placeholder="Taper une commande ou une recherche" />
                     <CommandList>
                         <CommandGroup heading="Commandes">
+                            {selectedNotebook && <CommandItem onSelect={handleCreateNote}><FilePlusCorner /> Créer une note dans {selectedNotebook.name}</CommandItem>}
                             <CommandItem onSelect={handleSelectCalendar}><Calendar1 /> Calendrier</CommandItem>
                             <CommandItem onSelect={handleDeleteNoteInTrash}><Trash /> Vider la Corbeille</CommandItem>
                         </CommandGroup>
