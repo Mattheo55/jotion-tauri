@@ -232,3 +232,18 @@
 .rbc-timeslot-group {
   min-height: 100px;
 }
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+:hover::-webkit-scrollbar {
+  width: 2px;
+  height: 6px;
+}
+
+:hover::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 999px;
+}

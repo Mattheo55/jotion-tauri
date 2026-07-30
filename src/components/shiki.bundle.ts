@@ -1,14 +1,14 @@
 /* Generate by @shikijs/codegen */
-import type {
-  DynamicImportLanguageRegistration,
-  DynamicImportThemeRegistration,
-  HighlighterGeneric,
-} from '@shikijs/types'
 import {
   createBundledHighlighter,
   createSingletonShorthands,
 } from '@shikijs/core'
 import { createJavaScriptRegexEngine } from '@shikijs/engine-javascript'
+import type {
+  DynamicImportLanguageRegistration,
+  DynamicImportThemeRegistration,
+  HighlighterGeneric,
+} from '@shikijs/types'
 
 type BundledLanguage =
   | 'typescript'
@@ -28,6 +28,7 @@ type BundledLanguage =
   | 'php'
   | 'yaml'
   | 'json'
+  | 'bash'
 type BundledTheme = 'dark-plus'
 type Highlighter = HighlighterGeneric<BundledLanguage, BundledTheme>
 
@@ -49,7 +50,7 @@ const bundledLanguages = {
   php: () => import('@shikijs/langs-precompiled/php'),
   yaml: () => import('@shikijs/langs-precompiled/yaml'),
   json: () => import('@shikijs/langs-precompiled/json'),
-  
+  bash: () => import('@shikijs/langs-precompiled/bash')
 } as Record<BundledLanguage, DynamicImportLanguageRegistration>
 
 const bundledThemes = {
@@ -87,6 +88,7 @@ export {
   codeToTokensWithThemes,
   createHighlighter,
   getLastGrammarState,
-  getSingletonHighlighter,
+  getSingletonHighlighter
 }
 export type { BundledLanguage, BundledTheme, Highlighter }
+

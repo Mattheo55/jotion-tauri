@@ -1,6 +1,6 @@
-import { ReactNode } from "react"
+import { Archive, ArchiveRestore, Edit, PackageOpen, Pin, Sparkle, Trash, View } from "lucide-react";
+import { ReactNode } from "react";
 import { ContextMenu, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuTrigger } from "./ui/context-menu";
-import { Archive, ArchiveRestore, Edit, PackageOpen, Sparkle, Trash, View } from "lucide-react";
 
 interface ContextMenuWrapperProps {
     children: ReactNode;
@@ -12,9 +12,11 @@ interface ContextMenuWrapperProps {
     onCorrect?: () => void;
     onArchive?: () => void;
     onRestore?: () => void;
+    onPin?: () => void;
 
     isArchived?: boolean;
     isTrashed?: boolean;
+    isPinned?: boolean;
 }
 
 export default function ContextMenuWrapper({
@@ -26,9 +28,11 @@ export default function ContextMenuWrapper({
     onCorrect,
     onArchive,
     onRestore,
+    onPin,
 
     isArchived,
-    isTrashed
+    isTrashed,
+    isPinned
 }: ContextMenuWrapperProps) {
   return (
     <ContextMenu>
@@ -39,6 +43,7 @@ export default function ContextMenuWrapper({
                 {onView && <ContextMenuItem onClick={onView}><View/> Voir</ContextMenuItem>}
                 {onOpen && <ContextMenuItem onClick={onOpen}><PackageOpen/> Ouvrir</ContextMenuItem>}
                 {onCorrect && <ContextMenuItem onClick={onOpen}><Sparkle/> Corriger</ContextMenuItem>}
+                {onPin && !isArchived && !isTrashed && <ContextMenuItem onClick={onPin}><Pin/> {isPinned ? "Retirer des épingler" : "Epingler"}</ContextMenuItem>}
                 {onArchive && <ContextMenuItem onClick={onArchive}><Archive/> {isArchived ? "Retirer des archives" : "Archiver"}</ContextMenuItem>}
                 {onRestore && isTrashed && <ContextMenuItem onClick={onRestore}><ArchiveRestore/> Restaurer</ContextMenuItem>}
                 {onDelete && <ContextMenuItem onClick={onDelete} variant='destructive'><Trash/> {isTrashed ? "Surpprimer définitivement" : "Supprimer"}</ContextMenuItem>}

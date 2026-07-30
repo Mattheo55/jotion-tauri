@@ -1,8 +1,8 @@
+import { ViewMode } from "@/store/navigationStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { and, desc, eq } from "drizzle-orm";
 import { db } from "../db/database";
 import { NoteInsert, noteTable } from "../db/schema";
-import { and, desc, eq } from "drizzle-orm";
-import { ViewMode } from "@/store/navigationStore";
 
 export const NOTES = 'NOTES'
 
@@ -26,7 +26,7 @@ export const useNoteByView = (view: ViewMode, id?: number) => {
         queryFn: () => {
             switch (view) {
                 case "notebook":
-                    return db.select().from(noteTable).where(and(eq(noteTable.notebook_id, id!), eq(noteTable.archive, false), eq(noteTable.trash, false))).orderBy(desc(noteTable.created_at));
+                    return db.select().from(noteTable).where(and(eq(noteTable.notebook_id, id!), eq(noteTable.archive, false), eq(noteTable.trash, false))).orderBy(desc(noteTable.pinned), desc(noteTable.created_at));
                 case "archive":
                     return db.select().from(noteTable).where(eq(noteTable.archive, true)).orderBy(desc(noteTable.created_at))
                 case "trash":

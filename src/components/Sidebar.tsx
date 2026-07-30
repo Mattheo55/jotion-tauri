@@ -1,6 +1,6 @@
 import { useConfirm } from "@/provider/ConfirmerProvider";
 import { useNavigationStore } from "@/store/navigationStore";
-import { Archive, Calendar1, FolderPlus, Plus, Trash } from "lucide-react";
+import { Archive, Calendar1, FolderPlus, Plus, Settings, Trash } from "lucide-react";
 import { useState } from "react";
 import { Notebook } from "../db/schema";
 import { useCreateNote } from "../hooks/useNote";
@@ -11,7 +11,6 @@ import ButtonSidebar from "./ButtonSidebar";
 import ContextMenuWrapper from "./ContextMenuWrapper";
 import JotionCommand from "./JotionCommand";
 import NotebookButton from "./NotebookButton";
-import SettingDialog from "./SettingDialog";
 import TitleMenuButtons from "./TitleMenuButtons";
 
 export default function Sidebar() {
@@ -98,6 +97,12 @@ export default function Sidebar() {
         setSelectedNote(null);
     }
 
+    const handleShowSettings = () => {
+        setNavigationMode('settings');
+        setSelectedNotbook(null);
+        setSelectedNote(null);
+    }
+
     return (
         <div className='bg-[#181818] w-65' data-tauri-drag-region>
             <div className="flex items-center justify-between p-5" data-tauri-drag-region>
@@ -110,7 +115,7 @@ export default function Sidebar() {
             </div>
 
             <div className="my-5">
-                <SettingDialog/>
+                <ButtonSidebar active={viewMode === "settings"} icon={Settings} onPress={handleShowSettings}>Paramètre</ButtonSidebar>
                 <ButtonSidebar active={viewMode === "archive"} icon={Archive} onPress={handleShowArchive}>Archive</ButtonSidebar>
                 <ButtonSidebar active={viewMode === "trash"} icon={Trash} onPress={handleShowTrash}>Corbeille</ButtonSidebar>
                 <ButtonSidebar active={viewMode === "calendar"} onPress={handleShowCalendar} icon={Calendar1}>Calendrier</ButtonSidebar>

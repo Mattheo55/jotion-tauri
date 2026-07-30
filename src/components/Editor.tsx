@@ -72,8 +72,9 @@ export default function Editor() {
                         python: { name: "Python", aliases: ["py"] },
                         rust: { name: "Rust", aliases: ["rs"] },
                         php: { name: "PHP", aliases: ["php"] },
-                        yaml: { name: "Yaml", aliases: ['yaml'] },
+                        yaml: { name: "YAML", aliases: ['yaml'] },
                         json: { name: "JSON", aliases: ['json'] },
+                        bash: { name: "Bash", aliases: ['bash'] }
                     },
                     createHighlighter: () => createHighlighter({themes: ["dark-plus"], langs: []})
                 })
@@ -136,7 +137,7 @@ export default function Editor() {
 
     return (
         <>
-            <div className="py-5 overflow-y-auto scrollbar-thin scrollbar-thumb-sky-700 scrollbar-track-sky-100 break-all">
+            <div className="py-5 overflow-y-auto break-all">
                 <div className="flex px-5 gap-2 items-center pl-10">
                     {selectedNote.archive && <Badge><Archive/> Archivé</Badge>}
                     {selectedNote.trash && <Badge variant={"destructive"}><Trash/> Corbeille</Badge>}

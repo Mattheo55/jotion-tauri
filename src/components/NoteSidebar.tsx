@@ -74,6 +74,10 @@ export default function NoteSidebar() {
     updateNote({id: note.id, archive: !note.archive});
   }
 
+  const handlePinNote = (note: Note) => {
+    updateNote({id: note.id, pinned: !note.pinned})
+  }
+
 
   return (
     <div className="relative">
@@ -87,12 +91,13 @@ export default function NoteSidebar() {
             <ContextMenuWrapper 
               key={n.id} 
               onDelete={() => handleDelete(n)} 
-              onCorrect={() => { }}
               onArchive={() => handleArchiveNote(n)}
               onRestore={() => handleRestoreNote(n.id)}
+              onPin={() => handlePinNote(n)}
 
               isArchived={n.archive}
               isTrashed={n.trash}
+              isPinned={n.pinned}
             >
               <NoteButton note={n} onPress={() => setSelectedNote(n)} active={n.id === selectedNote?.id} />
             </ContextMenuWrapper>

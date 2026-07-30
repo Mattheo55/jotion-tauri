@@ -45,6 +45,12 @@ pub fn run() {
             sql: include_str!("../../drizzle/20260724073734_luxuriant_rhodey/migration.sql"),
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 7,
+            description: "Add pinned to note table",
+            sql: include_str!("../../drizzle/20260730082210_same_meggan/migration.sql"),
+            kind: MigrationKind::Up,
+        },
     ];
 
     tauri::Builder::default()

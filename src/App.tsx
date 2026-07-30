@@ -3,6 +3,7 @@ import Calendar from './components/Calendar';
 import Editor from './components/Editor';
 import EmptyState from './components/EmptyState';
 import NoteSidebar from './components/NoteSidebar';
+import Settings from "./components/settings/Settings";
 import Sidebar from './components/Sidebar';
 import { Toaster } from './components/ui/toast';
 import { useNavigationStore } from './store/navigationStore';
@@ -20,7 +21,8 @@ export default function App() {
   const render = () => {switch (viewMode) {
     case "calendar":
       return <Calendar/>
-      break;
+    case "settings":
+        return <Settings />
     default:
       return (
         <>
