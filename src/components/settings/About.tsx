@@ -1,9 +1,18 @@
+import { getVersion } from "@tauri-apps/api/app";
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import Divider from "../Divider";
 import SettingsPageLayout from "./SettingsPageLayout";
 
 export default function About() {
+  const [appVersion, setAppVersion] = useState<string>("");
+  const appChannel = import.meta.env.DEV ? "dev" : "release";
+
+  useEffect(() => {
+    getVersion().then(setAppVersion);
+  }, [])
+
   return (
     <SettingsPageLayout
       title="À propos"
@@ -15,7 +24,7 @@ export default function About() {
         <img src="logo.png" className="h-15 select-none"/>
         <div>
           <p className="font-bold">Jotion</p>
-          <p className="text-sm text-gray-500">Version 0.4.0-dev · Ordinateur</p>
+          <p className="text-sm text-gray-500">Version {appVersion}-{appChannel} · Ordinateur</p>
         </div>
       </div>
 
