@@ -14,6 +14,7 @@
     "@blocknote/core": "^0.51.4",
     "@blocknote/mantine": "^0.51.4",
     "@blocknote/react": "^0.51.4",
+    "@ebay/nice-modal-react": "^1.2.13",
     "@editorjs/checklist": "^1.6.0",
     "@editorjs/editorjs": "^2.31.6",
     "@editorjs/header": "^2.8.9",

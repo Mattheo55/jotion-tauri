@@ -1,4 +1,4 @@
-import { Command, Globe, Info } from "lucide-react";
+import { Command, Download, Globe, Info } from "lucide-react";
 import { SettingsSection } from "./Settings";
 import SettingsButton from "./SettingsButton";
 
@@ -15,6 +15,7 @@ export default function SettingsSidebar({activeSection, setActiveSection}: Setti
         <div className="flex flex-col mt-5 gap-2">
             <SettingsButton active={activeSection === "general"} onPress={() => setActiveSection("general")} icon={Globe}>Général</SettingsButton>
             <SettingsButton active={activeSection === "shortcut"} onPress={() => setActiveSection("shortcut")} icon={Command}>Raccourcis</SettingsButton>
+            <SettingsButton active={activeSection === "expimp"} onPress={() => setActiveSection("expimp")} icon={Download}>Import/Export</SettingsButton>
             <SettingsButton active={activeSection === "about"} onPress={() => setActiveSection("about")} icon={Info}>A propos</SettingsButton>
         </div>
     </aside>

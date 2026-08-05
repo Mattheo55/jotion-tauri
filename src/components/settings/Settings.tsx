@@ -2,6 +2,7 @@ import { SettingsInterface } from "@/interface/settingsInterface";
 import { getSettings } from "@/service/SettingsService";
 import { useEffect, useState } from "react";
 import About from "./About";
+import ExportImportSettingsSection from "./ExportImportSettingsSection";
 import GeneralSettingsSection from "./GeneralSettingsSection";
 import SettingsSidebar from "./SettingsSidebar";
 import Shortcut from "./Shortcut";
@@ -9,7 +10,8 @@ import Shortcut from "./Shortcut";
 export const SETTINGS_SECTIONS = {
   general: GeneralSettingsSection,
   about: About,
-  shortcut: Shortcut
+  shortcut: Shortcut,
+  expimp: ExportImportSettingsSection,
 } as const;
 
 export type SettingsSection = keyof typeof SETTINGS_SECTIONS;
